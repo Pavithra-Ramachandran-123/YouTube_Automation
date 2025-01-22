@@ -40,14 +40,15 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
         public void testCase01() throws InterruptedException{
                 System.out.println("Start of testcase01");
                 driver.get("https://www.youtube.com/");
+                WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(10));
                 softAssert.assertTrue(driver.getCurrentUrl().contains("youtube.com"),"Current url is wrong");
                 WebElement about=driver.findElement(By.cssSelector("a[href$='.com/about/']"));
                 about.click();
                 softAssert.assertTrue(driver.getCurrentUrl().contains("about.youtube"),"Current url is wrong");
-                WebElement aboutMessage=driver.findElement(By.tagName("p"));
-                if(aboutMessage.getText().contains("mission"))
+                WebElement aboutMessage=driver.findElement(By.tagName("h1"));
+                if(aboutMessage.getText().contains("About"))
                         System.out.println("About Message : "+aboutMessage.getText());
-
+                
                 System.out.println("End of testcase01");
         }
         @Test
@@ -58,6 +59,7 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
                 WebElement moviesTab=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //yt-formatted-string[contains(text(),'Movies')]")));
                 moviesTab.click();
                 String topSellingNextButtonXpath="//span[contains(text(),'Top selling')]/ancestor::div[@id='dismissible']/descendant::button[@aria-label=\"Next\"]";
+                wait.until(ExpectedConditions.elementToBeClickable(By.xpath(topSellingNextButtonXpath)));
                 WebElement topSellingNextButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath(topSellingNextButtonXpath)));
                 while (true) { 
                         if(topSellingNextButton.isDisplayed() && topSellingNextButton.isEnabled()){
@@ -99,10 +101,12 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
                 System.out.println("Start of testcase03");
                 WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(10));
                 driver.get("https://www.youtube.com/");
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //yt-formatted-string[contains(text(),'Music')]")));
                 WebElement musicTab=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //yt-formatted-string[contains(text(),'Music')]")));
                 musicTab.click();
                 //Thread.sleep(5000);
                 String NextButtonXpath="(//button[@aria-label='Next'])[1]";
+                //wait.until(ExpectedConditions.elementToBeClickable(By.xpath(NextButtonXpath)));
                 WebElement NextButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath(NextButtonXpath)));
                 int i=0;
                 while (true) { 
@@ -154,7 +158,9 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
         @Test(dataProvider="excelData")
         public void testCase05(String searchTerm) throws InterruptedException{
                 System.out.println("Start of testcase05");
+                WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(10));
                 driver.get("https://www.youtube.com/");
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("search_query")));
                 WebElement searchBox=wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("search_query")));
                 searchBox.sendKeys(searchTerm+Keys.ENTER);
                 double totalViews=0;
