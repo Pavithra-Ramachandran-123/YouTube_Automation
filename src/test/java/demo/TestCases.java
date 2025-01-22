@@ -29,7 +29,7 @@ import demo.utils.ExcelDataProvider;
 
 public class TestCases extends ExcelDataProvider{ // Lets us read the data
         ChromeDriver driver;
-        WebDriverWait wait;
+        //WebDriverWait wait;
         SoftAssert softAssert = new SoftAssert();
         /*
          * TODO: Write your tests here with testng @Test annotation.
@@ -39,23 +39,29 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
         @Test
         public void testCase01() throws InterruptedException{
                 System.out.println("Start of testcase01");
+                Thread.sleep(3000);
                 driver.get("https://www.youtube.com/");
                 WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(10));
                 softAssert.assertTrue(driver.getCurrentUrl().contains("youtube.com"),"Current url is wrong");
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a[href$='.com/about/']")));
                 WebElement about=driver.findElement(By.cssSelector("a[href$='.com/about/']"));
                 about.click();
                 softAssert.assertTrue(driver.getCurrentUrl().contains("about.youtube"),"Current url is wrong");
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("h1")));
                 WebElement aboutMessage=driver.findElement(By.tagName("h1"));
                 if(aboutMessage.getText().contains("About"))
                         System.out.println("About Message : "+aboutMessage.getText());
                 
                 System.out.println("End of testcase01");
+                Thread.sleep(3000);
         }
         @Test
         public void testCase02() throws InterruptedException{
                 System.out.println("Start of testcase02");
+                Thread.sleep(3000);
                 driver.get("https://www.youtube.com/");
                 WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(10));
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //yt-formatted-string[contains(text(),'Movies')]")));
                 WebElement moviesTab=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //yt-formatted-string[contains(text(),'Movies')]")));
                 moviesTab.click();
                 String topSellingNextButtonXpath="//span[contains(text(),'Top selling')]/ancestor::div[@id='dismissible']/descendant::button[@aria-label=\"Next\"]";
@@ -93,12 +99,13 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
                 softAssert.assertTrue(f,"Movie category ");
                 //Thread.sleep(3000);
                 System.out.println("End of testcase02");
-                //softAssert.assertAll();
+                Thread.sleep(3000);
         }
 
         @Test
         public void testCase03 () throws InterruptedException{
                 System.out.println("Start of testcase03");
+                Thread.sleep(3000);
                 WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(10));
                 driver.get("https://www.youtube.com/");
                 wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //yt-formatted-string[contains(text(),'Music')]")));
@@ -106,14 +113,14 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
                 musicTab.click();
                 //Thread.sleep(5000);
                 String NextButtonXpath="(//button[@aria-label='Next'])[1]";
-                //wait.until(ExpectedConditions.elementToBeClickable(By.xpath(NextButtonXpath)));
+                wait.until(ExpectedConditions.elementToBeClickable(By.xpath(NextButtonXpath)));
                 WebElement NextButton=wait.until(ExpectedConditions.elementToBeClickable(By.xpath(NextButtonXpath)));
                 int i=0;
                 while (true) { 
                         if(NextButton.isDisplayed() && NextButton.isEnabled()){
                                 NextButton.click();
                                 System.out.println(i++);
-                                //Thread.sleep(1000);
+                                //Thread.sleep(3000);
                         }
                         else
                                 break;
@@ -124,18 +131,21 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
                 int intTrack=Integer.parseInt(noOfTracks.getText().split(" songs")[0]);
                 softAssert.assertTrue(intTrack<=50,"Movie category ");
                 System.out.println("End of testcase03");
-                //Thread.sleep(3000);
+                Thread.sleep(3000);
         }
         
         @Test
         public void testCase04() throws InterruptedException{
                 System.out.println("Start of testcase04");
+                Thread.sleep(3000);
                 WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(10));
                 driver.get("https://www.youtube.com/");
-                WebElement newsTab=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(" //yt-formatted-string[contains(text(),'News')]")));
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//yt-formatted-string[contains(text(),'News')]")));
+                WebElement newsTab=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//yt-formatted-string[contains(text(),'News')]")));
                 newsTab.click();
                 //List<WebElement> latestNews=wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//div[@role='link']")));
                 Thread.sleep(3000);
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@role='link']")));
                 List<WebElement> latestNews=driver.findElements((By.xpath("//div[@role='link']")));
                 int sum=0;
                 for(int i=0;i<3;i++){
@@ -152,19 +162,21 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
                 }
                 System.out.println("Sum of Likes : "+sum);
                 System.out.println("End of testcase04");
-                //Thread.sleep(3000);
+                Thread.sleep(3000);
         }
         
         @Test(dataProvider="excelData")
         public void testCase05(String searchTerm) throws InterruptedException{
                 System.out.println("Start of testcase05");
+                Thread.sleep(3000);
                 WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(10));
                 driver.get("https://www.youtube.com/");
                 wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("search_query")));
                 WebElement searchBox=wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("search_query")));
                 searchBox.sendKeys(searchTerm+Keys.ENTER);
                 double totalViews=0;
-                while(totalViews<100000000){
+                while(totalViews<300000000){
+                        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//ytd-video-renderer//span[contains(text(), 'views')]")));
                         List<WebElement> videosViewsList=wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//ytd-video-renderer//span[contains(text(), 'views')]")));
                         for(WebElement v:videosViewsList){
                                 String viewsString=v.getText().replaceAll("[^0-9KMB]", "");
@@ -179,7 +191,7 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
                                 else
                                         views=Double.parseDouble(viewsString);
                                 totalViews+=views;
-                                if(totalViews>=100000000){
+                                if(totalViews>=300000000){
                                         System.out.println("10Cr views reached for the search item : "+ searchTerm);
                                         break;
                                 }                        
@@ -189,6 +201,7 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
                 }
                 System.out.println("Total views count : "+totalViews);
                 System.out.println("End of testcase05");
+                Thread.sleep(3000);
         }
         /*
          * Do not change the provided methods unless necessary, they will help in
@@ -214,7 +227,7 @@ public class TestCases extends ExcelDataProvider{ // Lets us read the data
                 driver = new ChromeDriver(options);
 
                 driver.manage().window().maximize();
-                wait=new WebDriverWait(driver,Duration.ofSeconds(20));
+                //wait=new WebDriverWait(driver,Duration.ofSeconds(20));
                 
         }
 
