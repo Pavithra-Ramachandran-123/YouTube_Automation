@@ -1,6 +1,6 @@
 Demo Recording : https://drive.google.com/file/d/1S5OgEjh6_dnJQA7sNK3nE4lV46UalNxy/view?usp=sharing
 
-# YouTube Automation Project
+# YouTube Search Automation Project
 
 This project automates the YouTube website using Selenium WebDriver to perform various tasks on different tabs (Films, Music, and News) and validate information. The test cases include navigation, assertions, and interactions with elements, including searching for videos and verifying specific attributes.
 
